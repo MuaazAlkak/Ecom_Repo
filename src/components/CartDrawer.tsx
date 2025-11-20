@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { formatPrice } from '@/lib/utils';
+import { Currency } from '@/types/product';
+import { formatCurrencyWithLocale, convertCurrency } from '@/lib/currency';
 
 const CartDrawer = () => {
   const { 
@@ -179,11 +182,11 @@ const CartDrawer = () => {
                             return (
                               <>
                                 <span className={hasDiscount ? "text-destructive" : "text-primary"}>
-                                  {discountedPrice} {currency}
+                                  {formatPrice(discountedPrice, item.product.currency as Currency, currency)}
                                 </span>
                                 {hasDiscount && (
                                   <span className="text-sm text-muted-foreground line-through ml-2">
-                                    {item.product.price} {currency}
+                                    {formatPrice(item.product.price, item.product.currency as Currency, currency)}
                                   </span>
                                 )}
                               </>
@@ -242,7 +245,8 @@ const CartDrawer = () => {
                               ? Math.round(item.product.price * (1 - discountPercentage / 100))
                               : item.product.price;
                             
-                            return `${discountedPrice * item.quantity} ${currency}`;
+                            const totalPrice = discountedPrice * item.quantity;
+                            return formatPrice(totalPrice, item.product.currency as Currency, currency);
                           })()}
                         </p>
                       </div>
@@ -314,7 +318,12 @@ const CartDrawer = () => {
                 <dl>
                   <div className="flex justify-between py-1.5">
                     <dt className="text-sm text-muted-foreground">Subtotal</dt>
-                    <dd className="text-sm font-medium">{getSubtotal()} {currency}</dd>
+                    <dd className="text-sm font-medium">
+                      {formatCurrencyWithLocale(
+                        convertCurrency(getSubtotal(), 'SEK', currency),
+                        currency
+                      )}
+                    </dd>
                   </div>
                   
                   {discountCode && (
@@ -329,7 +338,12 @@ const CartDrawer = () => {
                           {discountPercentage}%
                         </Badge>
                       </dt>
-                      <dd className="text-sm font-medium text-primary">-{getDiscount()} {currency}</dd>
+                      <dd className="text-sm font-medium text-primary">
+                        -{formatCurrencyWithLocale(
+                          convertCurrency(getDiscount(), 'SEK', currency),
+                          currency
+                        )}
+                      </dd>
                     </motion.div>
                   )}
                   
@@ -340,7 +354,12 @@ const CartDrawer = () => {
                   <Separator className="my-2" />
                   <div className="flex justify-between py-1.5">
                     <dt className="text-base font-semibold">{t('cart.total')}</dt>
-                    <dd className="text-base font-semibold text-primary">{getTotalPrice()} {currency}</dd>
+                    <dd className="text-base font-semibold text-primary">
+                      {formatCurrencyWithLocale(
+                        convertCurrency(getTotalPrice(), 'SEK', currency),
+                        currency
+                      )}
+                    </dd>
                   </div>
                 </dl>
               </div>

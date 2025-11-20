@@ -42,7 +42,9 @@
     "inStock": "I lager",
     "outOfStock": "Slutsåld",
     "viewAll": "Visa alla produkter",
-    "explorePopular": "Utforska våra mest populära produkter, handplockade för kvalitet och autenticitet"
+    "explorePopular": "Utforska våra mest populära produkter, handplockade för kvalitet och autenticitet",
+    "noFeatured": "Inga utvalda produkter tillgängliga",
+    "loadError": "Kunde inte ladda produkter"
   },
   "store": {
     "title": "Vår butik",
@@ -64,10 +66,10 @@
     "retry": "Försök igen"
   },
   "about": {
-    "title": "Om Syria Store",
+    "title": "Om ArvSouq",
     "subtitle": "Firar syriskt arv genom autentiska, kvalitetsprodukter som förenar vårt community med stolthet",
     "ourStory": "Vår historia",
-    "story1": "Syria Store föddes ur en djup kärlek till syriskt arv och en önskan att hjälpa vårt community att hålla kontakten med sina rötter, oavsett var de befinner sig i världen.",
+    "story1": "ArvSouq föddes ur en djup kärlek till syriskt arv och en önskan att hjälpa vårt community att hålla kontakten med sina rötter, oavsett var de befinner sig i världen.",
     "story2": "Vi väljer och skapar varje produkt med autenticitet och kvalitet i åtanke. Från våra handgjorda virkade halsdukar till våra premiumflaggor, varje artikel väljs för att representera stoltheten och skönheten i syrisk kultur.",
     "story3": "Baserade i Sverige betjänar vi den syriska diasporan och alla som uppskattar syrisk kultur, och erbjuder autentiska produkter som firar vårt arv och håller våra traditioner levande.",
     "values": {
@@ -197,5 +199,8 @@
       "delivered": "Levererad",
       "cancelled": "Inställd"
     }
+  },
+  "common": {
+    "retry": "Försök igen"
   }
 }

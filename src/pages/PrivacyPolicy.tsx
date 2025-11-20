@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">1. Introduction</h2>
               <p className="leading-relaxed">
-                Welcome to Syria Store. We respect your privacy and are committed to protecting your personal data. 
+                Welcome to ArvSouq. We respect your privacy and are committed to protecting your personal data. 
                 This privacy policy will inform you about how we look after your personal data when you visit our website
                 and tell you about your privacy rights and how the law protects you.
               </p>
@@ -138,7 +138,7 @@ const PrivacyPolicy = () => {
                 If you have any questions about this privacy policy or our privacy practices, please contact us at:
               </p>
               <div className="mt-4 space-y-2">
-                <p className="leading-relaxed"><strong>Email:</strong> info@syriastore.com</p>
+                <p className="leading-relaxed"><strong>Email:</strong> info@arvsouq.com</p>
                 <p className="leading-relaxed"><strong>Phone:</strong> +46 70 123 4567</p>
                 <p className="leading-relaxed"><strong>Address:</strong> Storgatan 1, 12345 Stockholm, Sweden</p>
               </div>
@@ -209,7 +209,7 @@ const PrivacyPolicy = () => {
             If you have any questions about this privacy policy or our privacy practices, please contact us.
           </p>
           <div className="text-lg font-medium">
-            <p>Email: info@syriastore.com</p>
+            <p>Email: info@arvsouq.com</p>
             <p>Phone: +46 70 123 4567</p>
           </div>
         </motion.div>

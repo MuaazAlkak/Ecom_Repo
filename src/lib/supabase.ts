@@ -273,4 +273,34 @@ export const supabaseHelpers = {
       .getPublicUrl(path);
     return data.publicUrl;
   },
+
+  // Settings
+  async getShippingFeeEnabled(): Promise<boolean> {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'shipping_fee_enabled')
+        .single();
+
+      if (error) {
+        // If settings table doesn't exist or setting not found, default to true
+        console.warn('Failed to fetch shipping fee setting, defaulting to enabled:', error);
+        return true;
+      }
+
+      // Handle both boolean and string values
+      const value = data?.value;
+      if (typeof value === 'boolean') {
+        return value;
+      }
+      if (typeof value === 'string') {
+        return value === 'true';
+      }
+      return true; // Default to enabled
+    } catch (error) {
+      console.warn('Error fetching shipping fee setting, defaulting to enabled:', error);
+      return true; // Default to enabled on error
+    }
+  },
 };

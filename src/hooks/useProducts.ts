@@ -70,29 +70,25 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      try {
-        const { data, error } = await supabaseHelpers.getProducts();
-        
-        if (error) {
-          // Don't throw on RLS errors - return empty array instead
-          if (error.code === '42501' || error.message?.includes('permission denied') || error.message?.includes('RLS')) {
-            return [];
-          }
-          
-          throw error;
+      const { data, error } = await supabaseHelpers.getProducts();
+      
+      if (error) {
+        // Don't throw on RLS errors - return empty array instead
+        if (error.code === '42501' || error.message?.includes('permission denied') || error.message?.includes('RLS')) {
+          return [];
         }
         
-        const products = (data as Record<string, unknown>[]) || [];
-        
-        // Normalize products and filter out invalid ones
-        const normalizedProducts = products
-          .map(normalizeProduct)
-          .filter((product): product is Product => product !== null);
-        
-        return normalizedProducts;
-      } catch (error) {
         throw error;
       }
+      
+      const products = (data as Record<string, unknown>[]) || [];
+      
+      // Normalize products and filter out invalid ones
+      const normalizedProducts = products
+        .map(normalizeProduct)
+        .filter((product): product is Product => product !== null);
+      
+      return normalizedProducts;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2, // Retry twice for better reliability
@@ -108,19 +104,15 @@ export const useProductBySlug = (slug: string) => {
     queryKey: ['product', slug],
     queryFn: async () => {
       if (!slug) return null;
-      try {
-        const { data, error } = await supabaseHelpers.getProductBySlug(slug);
-        if (error) {
-          // Handle "not found" errors gracefully
-          if (error.code === 'PGRST116') {
-            return null;
-          }
-          throw error;
+      const { data, error } = await supabaseHelpers.getProductBySlug(slug);
+      if (error) {
+        // Handle "not found" errors gracefully
+        if (error.code === 'PGRST116') {
+          return null;
         }
-        return data ? normalizeProduct(data) : null;
-      } catch (error) {
         throw error;
       }
+      return data ? normalizeProduct(data) : null;
     },
     enabled: !!slug,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -136,30 +128,26 @@ export const useFeaturedProducts = () => {
   return useQuery({
     queryKey: ['products', 'featured'],
     queryFn: async () => {
-      try {
-        const { data, error } = await supabaseHelpers.getFeaturedProducts();
-        
-        if (error) {
-          // Don't throw on RLS errors - return empty array instead
-          if (error.code === '42501' || error.message?.includes('permission denied') || error.message?.includes('RLS')) {
-            return [];
-          }
-          
-          throw error;
+      const { data, error } = await supabaseHelpers.getFeaturedProducts();
+      
+      if (error) {
+        // Don't throw on RLS errors - return empty array instead
+        if (error.code === '42501' || error.message?.includes('permission denied') || error.message?.includes('RLS')) {
+          return [];
         }
         
-        const products = (data as Record<string, unknown>[]) || [];
-        
-        // Normalize products and filter out invalid ones
-        const normalizedProducts = products
-          .map(normalizeProduct)
-          .filter((product): product is Product => product !== null)
-          .slice(0, 4); // Limit to 4 products for display
-        
-        return normalizedProducts;
-      } catch (error) {
         throw error;
       }
+      
+      const products = (data as Record<string, unknown>[]) || [];
+      
+      // Normalize products and filter out invalid ones
+      const normalizedProducts = products
+        .map(normalizeProduct)
+        .filter((product): product is Product => product !== null)
+        .slice(0, 4); // Limit to 4 products for display
+      
+      return normalizedProducts;
     },
     staleTime: 0, // Don't cache - always fetch fresh to ensure we get latest after RLS fix
     gcTime: 0, // Don't keep in cache
@@ -175,28 +163,24 @@ export const useProductsByCategory = (category: string) => {
   return useQuery({
     queryKey: ['products', 'category', category],
     queryFn: async () => {
-      try {
-        let products: Record<string, unknown>[];
-        
-        if (!category || category === 'all') {
-          const { data, error } = await supabaseHelpers.getProducts();
-          if (error) throw error;
-          products = (data as Record<string, unknown>[]) || [];
-        } else {
-          const { data, error } = await supabaseHelpers.getProductsByCategory(category);
-          if (error) throw error;
-          products = (data as Record<string, unknown>[]) || [];
-        }
-        
-        // Normalize products and filter out invalid ones
-        const normalizedProducts = products
-          .map(normalizeProduct)
-          .filter((product): product is Product => product !== null);
-        
-        return normalizedProducts;
-      } catch (error) {
-        throw error;
+      let products: Record<string, unknown>[];
+      
+      if (!category || category === 'all') {
+        const { data, error } = await supabaseHelpers.getProducts();
+        if (error) throw error;
+        products = (data as Record<string, unknown>[]) || [];
+      } else {
+        const { data, error } = await supabaseHelpers.getProductsByCategory(category);
+        if (error) throw error;
+        products = (data as Record<string, unknown>[]) || [];
       }
+      
+      // Normalize products and filter out invalid ones
+      const normalizedProducts = products
+        .map(normalizeProduct)
+        .filter((product): product is Product => product !== null);
+      
+      return normalizedProducts;
     },
     enabled: !!category,
     staleTime: 1000 * 60 * 5, // 5 minutes

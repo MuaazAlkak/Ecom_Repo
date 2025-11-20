@@ -27,5 +27,5 @@ export interface CartItem {
   quantity: number;
 }
 
-export type Currency = 'SEK' | 'USD' | 'EUR';
+export type Currency = 'SEK' | 'USD';
 export type Language = 'en' | 'ar' | 'sv';

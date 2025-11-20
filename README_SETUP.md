@@ -1,6 +1,6 @@
-# Syria Store - E-commerce Setup Guide
+# ArvSouq - E-commerce Setup Guide
 
-Welcome to Syria Store! This guide will help you set up the complete e-commerce platform.
+Welcome to ArvSouq! This guide will help you set up the complete e-commerce platform.
 
 ## 🎨 What's Built
 

@@ -9,17 +9,18 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 import { useActiveEvent } from '@/hooks/useEvents';
 import QuickViewModal from './QuickViewModal';
 import LazyImage from './LazyImage';
+import { Currency } from '@/types/product';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { addItem } = useCartStore();
+  const { addItem, currency } = useCartStore();
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'ar' | 'sv';
   const [showQuickView, setShowQuickView] = useState(false);
@@ -113,11 +114,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   "text-xl font-bold",
                   hasDiscount && "text-destructive"
                 )}>
-                  {discountedPrice} {product.currency}
+                  {formatPrice(discountedPrice, product.currency as Currency, currency)}
                 </span>
                 {hasDiscount && (
                   <span className="text-sm text-muted-foreground line-through">
-                    {product.price} {product.currency}
+                    {formatPrice(product.price, product.currency as Currency, currency)}
                   </span>
                 )}
               </div>

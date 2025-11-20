@@ -11,6 +11,11 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Truck, CreditCard, ArrowLeft, Package, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { createCheckoutSession } from '@/lib/stripe';
+import { formatPrice } from '@/lib/utils';
+import { formatCurrencyWithLocale, convertCurrency } from '@/lib/currency';
+import { Currency } from '@/types/product';
+import { useActiveEvent } from '@/hooks/useEvents';
+import { supabaseHelpers } from '@/lib/supabase';
 
 const steps = ['shipping', 'payment', 'review'];
 
@@ -21,6 +26,7 @@ const Checkout = () => {
   const [step, setStep] = useState<'shipping' | 'payment' | 'review'>('shipping');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [shippingFeeEnabled, setShippingFeeEnabled] = useState<boolean>(true);
 
   const [shippingInfo, setShippingInfo] = useState({
     fullName: '',
@@ -38,6 +44,21 @@ const Checkout = () => {
       setPaymentError('Payment was canceled. Please try again.');
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    // Fetch shipping fee setting
+    const fetchShippingFeeSetting = async () => {
+      try {
+        const enabled = await supabaseHelpers.getShippingFeeEnabled();
+        setShippingFeeEnabled(enabled);
+      } catch (error) {
+        console.error('Failed to fetch shipping fee setting:', error);
+        // Default to enabled if fetch fails
+        setShippingFeeEnabled(true);
+      }
+    };
+    fetchShippingFeeSetting();
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -66,7 +87,7 @@ const Checkout = () => {
     setPaymentError(null);
 
     try {
-      const activeEvent = (window as any).activeEvent;
+      const activeEvent = (window as Window & { activeEvent?: { id?: string; discount_percentage?: number } }).activeEvent;
       const itemsWithEvent = items.map(item => ({
         ...item,
         activeEvent,
@@ -75,7 +96,7 @@ const Checkout = () => {
       const subtotal = getSubtotal();
       const discount = getDiscount();
       const total = getTotalPrice();
-      const shipping = total > 500 ? 0 : 49;
+      const shipping = shippingFeeEnabled ? (total > 500 ? 0 : 49) : 0;
 
       const { url } = await createCheckoutSession({
         items: itemsWithEvent,
@@ -93,9 +114,10 @@ const Checkout = () => {
       } else {
         throw new Error('No checkout URL received');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Checkout error:', error);
-      setPaymentError(error.message || 'Failed to initialize payment. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to initialize payment. Please try again.';
+      setPaymentError(errorMessage);
       toast.error(error.message || 'Failed to initialize payment');
     } finally {
       setIsProcessing(false);
@@ -103,7 +125,8 @@ const Checkout = () => {
   };
 
   const total = getTotalPrice();
-  const shipping = total > 500 ? 0 : 49; // Free shipping over 500 SEK
+  // Calculate shipping based on setting: if disabled, always 0; if enabled, use normal logic
+  const shipping = shippingFeeEnabled ? (total > 500 ? 0 : 49) : 0; // Free shipping over 500 SEK (if enabled)
   const finalTotal = total + shipping;
 
   return (
@@ -303,7 +326,7 @@ const Checkout = () => {
                         <h3 className="font-semibold mb-2">Order Items</h3>
                         <div className="space-y-2">
                           {items.map((item) => {
-                            const activeEvent = (window as any).activeEvent;
+                            const activeEvent = (window as Window & { activeEvent?: { id?: string; discount_percentage?: number } }).activeEvent;
                             const productDiscount = item.product.discount_percentage && item.product.discount_percentage > 0;
                             const eventDiscount = activeEvent?.discount_percentage && activeEvent.discount_percentage > 0;
                             const hasDiscount = productDiscount || eventDiscount;
@@ -324,11 +347,11 @@ const Checkout = () => {
                                 <div className="flex-1">
                                   <p className="font-medium text-sm">{item.product.title.en}</p>
                                   <p className="text-sm text-muted-foreground">
-                                    Qty: {item.quantity} × {unitPrice} {currency}
+                                    Qty: {item.quantity} × {formatPrice(unitPrice, item.product.currency as Currency, currency)}
                                   </p>
                                 </div>
                                 <p className="font-semibold">
-                                  {unitPrice * item.quantity} {currency}
+                                  {formatPrice(unitPrice * item.quantity, item.product.currency as Currency, currency)}
                                 </p>
                               </div>
                             );
@@ -425,7 +448,8 @@ const Checkout = () => {
                               ? Math.round(item.product.price * (1 - discountPercentage / 100))
                               : item.product.price;
                             
-                            return `${discountedPrice * item.quantity} ${currency}`;
+                            const totalPrice = discountedPrice * item.quantity;
+                            return formatPrice(totalPrice, item.product.currency as Currency, currency);
                           })()}
                         </p>
                       </div>
@@ -440,7 +464,10 @@ const Checkout = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
                     <span className="font-medium">
-                      {getSubtotal()} {currency}
+                      {formatCurrencyWithLocale(
+                        convertCurrency(getSubtotal(), 'SEK', currency),
+                        currency
+                      )}
                     </span>
                   </div>
                   
@@ -448,7 +475,10 @@ const Checkout = () => {
                     <div className="flex justify-between text-sm text-primary">
                       <span>Discount ({discountPercentage}%)</span>
                       <span className="font-medium">
-                        -{getDiscount()} {currency}
+                        -{formatCurrencyWithLocale(
+                          convertCurrency(getDiscount(), 'SEK', currency),
+                          currency
+                        )}
                       </span>
                     </div>
                   )}
@@ -459,13 +489,19 @@ const Checkout = () => {
                       {shipping === 0 ? (
                         <span className="text-primary">Free</span>
                       ) : (
-                        `${shipping} ${currency}`
+                        formatCurrencyWithLocale(
+                          convertCurrency(shipping, 'SEK', currency),
+                          currency
+                        )
                       )}
                     </span>
                   </div>
                   {getTotalPrice() < 500 && shipping > 0 && (
                     <p className="text-xs text-muted-foreground">
-                      Add {500 - getTotalPrice()} {currency} more for free shipping
+                      Add {formatCurrencyWithLocale(
+                        convertCurrency(500 - getTotalPrice(), 'SEK', currency),
+                        currency
+                      )} more for free shipping
                     </p>
                   )}
                 </div>
@@ -475,7 +511,10 @@ const Checkout = () => {
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
                   <span className="text-primary">
-                    {finalTotal} {currency}
+                    {formatCurrencyWithLocale(
+                      convertCurrency(finalTotal, 'SEK', currency),
+                      currency
+                    )}
                   </span>
                 </div>
 

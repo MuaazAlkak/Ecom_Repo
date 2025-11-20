@@ -6,6 +6,7 @@ import { useCartStore } from '@/store/useCartStore';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { CurrencySwitcher } from '@/components/CurrencySwitcher';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
@@ -65,7 +66,7 @@ const Header = () => {
           </div>
           <div>
             <span className="font-bold text-xl whitespace-nowrap">
-              {isArabic ? 'سوق سوريا' : 'Syria Store'}
+              {isArabic ? 'أرف سوق' : 'ArvSouq'}
             </span>
             <div className="hidden sm:block text-xs text-muted-foreground">
               {isArabic ? 'تراث سوري أصيل' : 'Authentic Syrian Heritage'}
@@ -98,9 +99,14 @@ const Header = () => {
           })}
         </nav>
 
-        {/* Language Switcher, Cart & Mobile Menu */}
-        <div className="flex items-center gap-2">
-          <LanguageSwitcher />
+        {/* Language Switcher, Currency Switcher, Cart & Mobile Menu */}
+        <div className="flex items-center gap-4">
+          <div className="relative z-50">
+            <LanguageSwitcher />
+          </div>
+          <div className="relative z-40">
+            <CurrencySwitcher />
+          </div>
           
           <Button
             variant={scrolled ? "secondary" : "outline"}

@@ -9,7 +9,8 @@ import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useActiveEvent } from '@/hooks/useEvents';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
+import { Currency } from '@/types/product';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -18,7 +19,7 @@ interface QuickViewModalProps {
 }
 
 const QuickViewModal = ({ product, open, onClose }: QuickViewModalProps) => {
-  const { addItem } = useCartStore();
+  const { addItem, currency } = useCartStore();
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'ar' | 'sv';
   const { data: activeEvent } = useActiveEvent();
@@ -92,11 +93,11 @@ const QuickViewModal = ({ product, open, onClose }: QuickViewModalProps) => {
                 "text-3xl font-bold",
                 hasDiscount && "text-destructive"
               )}>
-                {discountedPrice} {product.currency}
+                {formatPrice(discountedPrice, product.currency as Currency, currency)}
               </span>
               {hasDiscount && (
                 <span className="text-lg text-muted-foreground line-through">
-                  {product.price} {product.currency}
+                  {formatPrice(product.price, product.currency as Currency, currency)}
                 </span>
               )}
             </div>

@@ -35,16 +35,16 @@ const TermsConditions = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">1. Introduction</h2>
               <p className="leading-relaxed">
-                These terms and conditions outline the rules and regulations for the use of Syria Store's website.
+                These terms and conditions outline the rules and regulations for the use of ArvSouq's website.
                 By accessing this website, we assume you accept these terms and conditions in full.
-                Do not continue to use Syria Store's website if you do not accept all of the terms and conditions stated on this page.
+                Do not continue to use ArvSouq's website if you do not accept all of the terms and conditions stated on this page.
               </p>
             </div>
             
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">2. Intellectual Property Rights</h2>
               <p className="leading-relaxed">
-                Other than the content you own, under these terms, Syria Store and/or its licensors own all the intellectual property rights
+                Other than the content you own, under these terms, ArvSouq and/or its licensors own all the intellectual property rights
                 and materials contained in this website. You are granted a limited license only for purposes of viewing the material contained on this website.
               </p>
             </div>
@@ -67,19 +67,19 @@ const TermsConditions = () => {
               <h2 className="text-2xl font-bold mt-8 mb-4">4. Your Content</h2>
               <p className="leading-relaxed">
                 In these terms and conditions, "Your Content" shall mean any audio, video, text, images or other material you choose to display on this website.
-                By displaying Your Content, you grant Syria Store a non-exclusive, worldwide irrevocable, sub-licensable license to use, reproduce, adapt, publish,
+                By displaying Your Content, you grant ArvSouq a non-exclusive, worldwide irrevocable, sub-licensable license to use, reproduce, adapt, publish,
                 translate and distribute it in any and all media.
               </p>
               <p className="leading-relaxed mt-4">
                 Your Content must be your own and must not be invading any third-party's rights.
-                Syria Store reserves the right to remove any of Your Content from this website at any time without notice.
+                ArvSouq reserves the right to remove any of Your Content from this website at any time without notice.
               </p>
             </div>
             
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">5. No Warranties</h2>
               <p className="leading-relaxed">
-                This website is provided "as is," with all faults, and Syria Store expresses no representations or warranties, of any kind related to this website or the materials contained on this website.
+                This website is provided "as is," with all faults, and ArvSouq expresses no representations or warranties, of any kind related to this website or the materials contained on this website.
                 Also, nothing contained on this website shall be interpreted as advising you.
               </p>
             </div>
@@ -87,8 +87,8 @@ const TermsConditions = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">6. Limitation of Liability</h2>
               <p className="leading-relaxed">
-                In no event shall Syria Store, nor any of its officers, directors and employees, be held liable for anything arising out of or in any way connected with your use of this website,
-                whether such liability is under contract. Syria Store, including its officers, directors and employees shall not be held liable for any indirect,
+                In no event shall ArvSouq, nor any of its officers, directors and employees, be held liable for anything arising out of or in any way connected with your use of this website,
+                whether such liability is under contract. ArvSouq, including its officers, directors and employees shall not be held liable for any indirect,
                 consequential or special liability arising out of or in any way related to your use of this website.
               </p>
             </div>
@@ -96,7 +96,7 @@ const TermsConditions = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">7. Indemnification</h2>
               <p className="leading-relaxed">
-                You hereby indemnify to the fullest extent Syria Store from and against any and/or all liabilities, costs, demands, causes of action,
+                You hereby indemnify to the fullest extent ArvSouq from and against any and/or all liabilities, costs, demands, causes of action,
                 damages and expenses arising in any way related to your breach of any of the provisions of these terms.
               </p>
             </div>
@@ -111,14 +111,14 @@ const TermsConditions = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">9. Variation of Terms</h2>
               <p className="leading-relaxed">
-                Syria Store is permitted to revise these terms at any time as it sees fit, and by using this website you are expected to review these terms on a regular basis.
+                ArvSouq is permitted to revise these terms at any time as it sees fit, and by using this website you are expected to review these terms on a regular basis.
               </p>
             </div>
             
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">10. Assignment</h2>
               <p className="leading-relaxed">
-                The Syria Store is allowed to assign, transfer, and subcontract its rights and/or obligations under these terms without any notification.
+                The ArvSouq is allowed to assign, transfer, and subcontract its rights and/or obligations under these terms without any notification.
                 However, you are not allowed to assign, transfer, or subcontract any of your rights and/or obligations under these terms.
               </p>
             </div>
@@ -126,7 +126,7 @@ const TermsConditions = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold mt-8 mb-4">11. Entire Agreement</h2>
               <p className="leading-relaxed">
-                These terms constitute the entire agreement between Syria Store and you in relation to your use of this website,
+                These terms constitute the entire agreement between ArvSouq and you in relation to your use of this website,
                 and supersede all prior agreements and understandings.
               </p>
             </div>
@@ -145,7 +145,7 @@ const TermsConditions = () => {
                 If you have any questions about these Terms and Conditions, please contact us at:
               </p>
               <div className="mt-4 space-y-2">
-                <p className="leading-relaxed"><strong>Email:</strong> info@syriastore.com</p>
+                <p className="leading-relaxed"><strong>Email:</strong> info@arvsouq.com</p>
                 <p className="leading-relaxed"><strong>Phone:</strong> +46 70 123 4567</p>
                 <p className="leading-relaxed"><strong>Address:</strong> Storgatan 1, 12345 Stockholm, Sweden</p>
               </div>
@@ -167,7 +167,7 @@ const TermsConditions = () => {
             </div>
             <h3 className="font-bold mb-2">Intellectual Property</h3>
             <p className="text-sm text-muted-foreground">
-              All content on this website is the property of Syria Store and is protected by copyright laws.
+              All content on this website is the property of ArvSouq and is protected by copyright laws.
             </p>
           </motion.div>
 
@@ -216,7 +216,7 @@ const TermsConditions = () => {
             If you have any questions about these terms and conditions, please don't hesitate to contact us.
           </p>
           <div className="text-lg font-medium">
-            <p>Email: info@syriastore.com</p>
+            <p>Email: info@arvsouq.com</p>
             <p>Phone: +46 70 123 4567</p>
           </div>
         </motion.div>

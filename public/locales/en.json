@@ -42,7 +42,9 @@
     "inStock": "In stock",
     "outOfStock": "Out of stock",
     "viewAll": "View All Products",
-    "explorePopular": "Explore our most popular items, handpicked for quality and authenticity"
+    "explorePopular": "Explore our most popular items, handpicked for quality and authenticity",
+    "noFeatured": "No featured products available",
+    "loadError": "Failed to load products"
   },
   "store": {
     "title": "Our Store",
@@ -64,10 +66,10 @@
     "retry": "Retry"
   },
   "about": {
-    "title": "About Syria Store",
+    "title": "About ArvSouq",
     "subtitle": "Celebrating Syrian heritage through authentic, quality products that connect our community with pride",
     "ourStory": "Our Story",
-    "story1": "Syria Store was born from a deep love for Syrian heritage and a desire to help our community stay connected to their roots, no matter where they are in the world.",
+    "story1": "ArvSouq was born from a deep love for Syrian heritage and a desire to help our community stay connected to their roots, no matter where they are in the world.",
     "story2": "We carefully curate and create each product with authenticity and quality in mind. From our handmade crochet scarves to our premium flags, every item is chosen to represent the pride and beauty of Syrian culture.",
     "story3": "Based in Sweden, we serve the Syrian diaspora and anyone who appreciates Syrian culture, providing authentic products that celebrate our heritage and keep our traditions alive.",
     "values": {
@@ -197,5 +199,8 @@
       "delivered": "Delivered",
       "cancelled": "Cancelled"
     }
+  },
+  "common": {
+    "retry": "Retry"
   }
 }

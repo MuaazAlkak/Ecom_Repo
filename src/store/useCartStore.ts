@@ -70,6 +70,7 @@ export const useCartStore = create<CartStore>()(
 
       setCurrency: (currency) => {
         set({ currency });
+        localStorage.setItem('preferred-currency', currency);
       },
 
       toggleCart: () => {

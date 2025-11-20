@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { supabaseHelpers } from '@/lib/supabase';
 import { formatCurrency } from '@/lib/utils';
+import { sendConfirmationEmail, retrieveCheckoutSession, createOrderFromSession } from '@/lib/stripe';
 
 interface OrderItem {
   id: string;
@@ -53,6 +54,7 @@ export default function OrderConfirmation() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(!!(orderId || sessionId));
   const [error, setError] = useState<string | null>(null);
+  const emailSentRef = useRef<boolean>(false);
 
   useEffect(() => {
     confetti({
@@ -61,27 +63,63 @@ export default function OrderConfirmation() {
       origin: { y: 0.6 }
     });
 
-    const fetchOrder = async () => {
+    const fetchOrder = async (retryCount = 0) => {
+      let orderData = null;
       try {
-        let orderData = null;
 
         if (sessionId) {
-          const { data: orders, error: sessionError } = await supabaseHelpers.supabase
-            .from('orders')
-            .select(`
-              *,
-              order_items (
+          // First, create the order from the Stripe session (verifies payment)
+          try {
+            console.log('Creating order from session:', sessionId);
+            const result = await createOrderFromSession(sessionId);
+            console.log('Order creation result:', result);
+            
+            if (result.success && result.order) {
+              orderData = result.order;
+              
+              // Fetch full order details with items
+              const { data: fullOrder, error: fetchError } = await supabaseHelpers.supabase
+                .from('orders')
+                .select(`
+                  *,
+                  order_items (
+                    *,
+                    products (id, title, images)
+                  )
+                `)
+                .eq('id', result.order.id)
+                .single();
+              
+              if (!fetchError && fullOrder) {
+                orderData = fullOrder;
+              }
+            }
+          } catch (createError: unknown) {
+            console.error('Error creating order from session:', createError);
+            
+            // If order creation fails, try fetching existing order (might already exist)
+            const { data: orders, error: sessionError } = await supabaseHelpers.supabase
+              .from('orders')
+              .select(`
                 *,
-                products (id, title, images)
-              )
-            `)
-            .eq('stripe_session_id', sessionId)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-          
-          if (!sessionError && orders) {
-            orderData = orders;
+                order_items (
+                  *,
+                  products (id, title, images)
+                )
+              `)
+              .eq('stripe_session_id', sessionId)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .single();
+            
+            if (!sessionError && orders) {
+              orderData = orders;
+            } else if (retryCount < 3) {
+              // Retry if order creation is still in progress
+              console.log(`Retrying order fetch... (attempt ${retryCount + 1}/3)`);
+              setTimeout(() => fetchOrder(retryCount + 1), 2000);
+              return;
+            }
           }
         } else if (orderId) {
           const { data, error } = await supabaseHelpers.supabase
@@ -102,14 +140,25 @@ export default function OrderConfirmation() {
 
         if (orderData) {
           setOrder(orderData as Order);
+          // Email is sent automatically by backend when creating order
         } else if (sessionId || orderId) {
-          setError('Order not found. It may still be processing.');
+          if (retryCount >= 3) {
+            setError('Order not found. The order may still be processing. Please check your email for confirmation.');
+          }
         }
       } catch (err) {
         console.error('Error fetching order:', err);
-        setError('Could not load order details');
+        if (retryCount >= 3) {
+          setError('Could not load order details');
+        } else {
+          // Retry on error
+          setTimeout(() => fetchOrder(retryCount + 1), 2000);
+          return;
+        }
       } finally {
-        setLoading(false);
+        if (retryCount === 0 || orderData) {
+          setLoading(false);
+        }
       }
     };
 
@@ -307,7 +356,7 @@ export default function OrderConfirmation() {
               transition={{ delay: 0.7 }}
               className="text-xs text-muted-foreground mt-8"
             >
-              Need help? Contact us at info@syriastore.com
+              Need help? Contact us at info@arvsouq.com
             </motion.p>
           </CardContent>
         </Card>

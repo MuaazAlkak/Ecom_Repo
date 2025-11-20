@@ -68,7 +68,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <span className="font-bold text-xl">
-                      {isArabic ? 'سوق سوريا' : 'Syria Store'}
+                      {isArabic ? 'أرف سوق' : 'ArvSouq'}
                     </span>
                     <div className="text-xs text-muted-foreground">
                       {isArabic ? 'تراث سوري أصيل' : 'Authentic Syrian Heritage'}
@@ -174,8 +174,8 @@ const Footer = () => {
                 </li>
                 <li className="flex gap-3 text-sm items-center">
                   <Mail className="h-5 w-5 text-primary shrink-0" />
-                  <a href="mailto:info@syriastore.com" className="text-muted-foreground hover:text-primary">
-                    info@syriastore.com
+                  <a href="mailto:info@arvsouq.com" className="text-muted-foreground hover:text-primary">
+                    info@arvsouq.com
                   </a>
                 </li>
               </ul>
@@ -237,7 +237,7 @@ const Footer = () => {
         <div className="container py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2024 {isArabic ? 'سوق سوريا' : 'Syria Store'}. {t('footer.rights')}.
+              © 2024 {isArabic ? 'أرف سوق' : 'ArvSouq'}. {t('footer.rights')}.
             </p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Link to="/privacy-policy" className="hover:text-primary transition-colors">

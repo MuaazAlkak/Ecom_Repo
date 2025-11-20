@@ -8,9 +8,35 @@ export const stripePromise = stripePublishableKey
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+interface ShippingInfo {
+  fullName: string;
+  email: string;
+  phone?: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
+interface CheckoutItem {
+  product: {
+    id: string;
+    title: { en: string; ar?: string; sv?: string };
+    price: number;
+    currency: string;
+    images: string[];
+    discount_percentage?: number;
+  };
+  quantity: number;
+  activeEvent?: {
+    id?: string;
+    discount_percentage?: number;
+  };
+}
+
 export const createCheckoutSession = async (data: {
-  items: any[];
-  shippingInfo: any;
+  items: CheckoutItem[];
+  shippingInfo: ShippingInfo;
   currency: string;
   discountCode?: string;
   discountAmount?: number;
@@ -50,3 +76,36 @@ export const retrieveCheckoutSession = async (sessionId: string) => {
   return response.json();
 };
 
+export const createOrderFromSession = async (sessionId: string) => {
+  const response = await fetch(`${API_URL}/api/checkout/create-order-from-session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ sessionId }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to create order');
+  }
+
+  return response.json();
+};
+
+export const sendConfirmationEmail = async (sessionId?: string, orderId?: string) => {
+  const response = await fetch(`${API_URL}/api/checkout/send-confirmation-email`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ sessionId, orderId }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to send confirmation email');
+  }
+
+  return response.json();
+};
