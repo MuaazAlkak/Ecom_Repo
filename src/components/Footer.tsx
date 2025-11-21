@@ -192,24 +192,6 @@ const Footer = () => {
               {t('footer.securePayment') || 'Secure Payment Methods'}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6">
-              {/* Swish */}
-              <div className="flex items-center justify-center h-12 px-4 bg-white rounded-lg border">
-                <img 
-                  src="/locales/images/swish.png" 
-                  alt="Swish" 
-                  className="h-8 object-contain"
-                />
-              </div>
-              
-              {/* Klarna */}
-              <div className="flex items-center justify-center h-12 px-4 bg-white rounded-lg border">
-                <img 
-                  src="/locales/images/Klarna.png" 
-                  alt="Klarna" 
-                  className="h-6 object-contain"
-                />
-              </div>
-              
               {/* Visa */}
               <div className="flex items-center justify-center h-12 px-4 bg-white rounded-lg border">
                 <img 
