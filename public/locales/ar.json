@@ -54,7 +54,8 @@
       "all": "جميع المنتجات",
       "flags": "الأعلام",
       "scarves": "الأوشحة",
-      "accessories": "الإكسسوارات"
+      "accessories": "الإكسسوارات",
+      "traditional": "تقليدي"
     },
     "showing": "عرض",
     "product": "منتج",
@@ -124,6 +125,7 @@
     "flags": "الأعلام",
     "scarves": "الأوشحة",
     "accessories": "الإكسسوارات",
+    "traditional": "تقليدي",
     "rights": "جميع الحقوق محفوظة",
     "madeWith": "صنع بحب لسوريا",
     "stayUpdated": "ابق على اطلاع",

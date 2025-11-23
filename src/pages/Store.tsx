@@ -36,6 +36,7 @@ const Store = () => {
     { id: 'flags', label: t('store.categories.flags') },
     { id: 'scarves', label: t('store.categories.scarves') },
     { id: 'accessories', label: t('store.categories.accessories') },
+    { id: 'traditional', label: t('store.categories.traditional') },
   ];
 
   const filteredProducts = useMemo(() => {

@@ -54,7 +54,8 @@
       "all": "Alla produkter",
       "flags": "Flaggor",
       "scarves": "Halsdukar",
-      "accessories": "Accessoarer"
+      "accessories": "Accessoarer",
+      "traditional": "Traditionell"
     },
     "showing": "Visar",
     "product": "produkt",
@@ -124,6 +125,7 @@
     "flags": "Flaggor",
     "scarves": "Halsdukar",
     "accessories": "Accessoarer",
+    "traditional": "Traditionell",
     "rights": "Alla rättigheter förbehållna",
     "madeWith": "Gjord med kärlek för Syrien",
     "stayUpdated": "Håll dig uppdaterad",

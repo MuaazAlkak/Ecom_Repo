@@ -54,7 +54,8 @@
       "all": "All Products",
       "flags": "Flags",
       "scarves": "Scarves",
-      "accessories": "Accessories"
+      "accessories": "Accessories",
+      "traditional": "Traditional"
     },
     "showing": "Showing",
     "product": "product",
@@ -124,6 +125,7 @@
     "flags": "Flags",
     "scarves": "Scarves",
     "accessories": "Accessories",
+    "traditional": "Traditional",
     "rights": "All rights reserved",
     "madeWith": "Made with love for Syria",
     "stayUpdated": "Stay Updated",

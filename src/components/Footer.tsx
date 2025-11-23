@@ -117,7 +117,8 @@ const Footer = () => {
                   { to: "/store", label: t('footer.allProducts') },
                   { to: "/store?category=flags", label: t('footer.flags') },
                   { to: "/store?category=scarves", label: t('footer.scarves') },
-                  { to: "/store?category=accessories", label: t('footer.accessories') }
+                  { to: "/store?category=accessories", label: t('footer.accessories') },
+                  { to: "/store?category=traditional", label: t('footer.traditional') }
                 ].map((link, i) => (
                   <li key={link.to}>
                     <Link 
