@@ -46,7 +46,12 @@ const Store = () => {
       
       const matchesSearch = title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
                            description.toLowerCase().includes(debouncedSearch.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+      
+      // Category filter: case-insensitive comparison and handle null/undefined
+      const productCategory = (product.category || '').toLowerCase().trim();
+      const selectedCategoryLower = selectedCategory.toLowerCase().trim();
+      const matchesCategory = selectedCategory === 'all' || productCategory === selectedCategoryLower;
+      
       return matchesSearch && matchesCategory;
     });
   }, [products, debouncedSearch, selectedCategory, lang]);
