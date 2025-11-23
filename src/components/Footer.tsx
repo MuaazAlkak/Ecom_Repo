@@ -167,12 +167,6 @@ const Footer = () => {
                   </div>
                 </li>
                 <li className="flex gap-3 text-sm items-center">
-                  <Phone className="h-5 w-5 text-primary shrink-0" />
-                  <a href="tel:+46123456789" className="text-muted-foreground hover:text-primary">
-                    +46 123 456 789
-                  </a>
-                </li>
-                <li className="flex gap-3 text-sm items-center">
                   <Mail className="h-5 w-5 text-primary shrink-0" />
                   <a href="mailto:info@arvsouq.com" className="text-muted-foreground hover:text-primary">
                     info@arvsouq.com
