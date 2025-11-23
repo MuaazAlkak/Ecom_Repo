@@ -5,14 +5,60 @@ import { useFeaturedProducts } from '@/hooks/useProducts';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, ShieldCheck, Truck, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ahmedImage from '@/assets/ahmed.png';
 import PageTransition from '@/components/PageTransition';
+import { supabase } from '@/lib/supabase';
 
 const Home = () => {
   const { data: featuredProducts = [], isLoading, error } = useFeaturedProducts();
   const { t } = useTranslation();
-  
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const { data, error } = await supabase.storage
+          .from('HeroImage')
+          .list('', {
+            limit: 100,
+            offset: 0,
+          });
+
+        if (error) {
+          console.warn('Error fetching hero images:', error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const imageUrls = data.map((file) => {
+            const { data: urlData } = supabase.storage
+              .from('HeroImage')
+              .getPublicUrl(file.name);
+            return urlData.publicUrl;
+          });
+          setHeroImages(imageUrls);
+        }
+      } catch (err) {
+        console.warn('Error loading hero images:', err);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
+
+  useEffect(() => {
+    if (heroImages.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+      }, 10000);
+
+      return () => clearInterval(interval);
+    }
+  }, [heroImages.length]);
+
+  const currentHeroImage = heroImages.length > 0 ? heroImages[currentImageIndex] : ahmedImage;
 
   return (
     <PageTransition>
@@ -57,10 +103,14 @@ const Home = () => {
               className="relative"
             >
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl bg-muted">
-                <img
-                  src={ahmedImage}
+                <motion.img
+                  key={currentImageIndex}
+                  src={currentHeroImage}
                   alt="Celebrate Syrian Heritage"
                   className="w-full h-auto object-cover rounded-2xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                 />
               </div>
               <div className="absolute -z-10 top-8 right-8 w-full h-full bg-primary/20 rounded-2xl" />
