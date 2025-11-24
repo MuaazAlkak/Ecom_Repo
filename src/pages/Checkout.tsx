@@ -4,6 +4,13 @@ import { useCartStore } from '@/store/useCartStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -18,6 +25,36 @@ import { useActiveEvent } from '@/hooks/useEvents';
 import { supabaseHelpers } from '@/lib/supabase';
 
 const steps = ['shipping', 'payment', 'review'];
+
+const EU_COUNTRIES = [
+  'Austria',
+  'Belgium',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Ireland',
+  'Italy',
+  'Latvia',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Netherlands',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+];
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -82,6 +119,21 @@ const Checkout = () => {
     setStep('review');
   };
 
+  // Calculate shipping cost based on country and total
+  const calculateShipping = (country: string, total: number): number => {
+    if (!shippingFeeEnabled) return 0;
+    
+    const isSweden = country === 'Sweden';
+    
+    if (isSweden) {
+      // Sweden: 49.99 SEK, free if total > 500
+      return total > 500 ? 0 : 49.99;
+    } else {
+      // Other EU countries: 129.99 SEK, free if total > 800
+      return total > 800 ? 0 : 129.99;
+    }
+  };
+
   const handleProceedToPayment = async () => {
     setIsProcessing(true);
     setPaymentError(null);
@@ -96,7 +148,7 @@ const Checkout = () => {
       const subtotal = getSubtotal();
       const discount = getDiscount();
       const total = getTotalPrice();
-      const shipping = shippingFeeEnabled ? (total > 500 ? 0 : 49) : 0;
+      const shipping = calculateShipping(shippingInfo.country, total);
 
       const { url } = await createCheckoutSession({
         items: itemsWithEvent,
@@ -118,15 +170,15 @@ const Checkout = () => {
       console.error('Checkout error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to initialize payment. Please try again.';
       setPaymentError(errorMessage);
-      toast.error(error.message || 'Failed to initialize payment');
+      toast.error(errorMessage || 'Failed to initialize payment');
     } finally {
       setIsProcessing(false);
     }
   };
 
   const total = getTotalPrice();
-  // Calculate shipping based on setting: if disabled, always 0; if enabled, use normal logic
-  const shipping = shippingFeeEnabled ? (total > 500 ? 0 : 49) : 0; // Free shipping over 500 SEK (if enabled)
+  // Calculate shipping based on country and total
+  const shipping = calculateShipping(shippingInfo.country, total);
   const finalTotal = total + shipping;
 
   return (
@@ -187,7 +239,9 @@ const Checkout = () => {
                       <Truck className="h-5 w-5 text-primary" />
                       Shipping Information
                     </CardTitle>
-                    <CardDescription>Enter your delivery details</CardDescription>
+                    <CardDescription>
+                      Enter your delivery details. Shipping available in all EU countries.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleShippingSubmit} className="space-y-4">
@@ -272,14 +326,26 @@ const Checkout = () => {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="country">Country</Label>
-                          <Input
-                            id="country"
+                          <Select
                             value={shippingInfo.country}
-                            onChange={(e) =>
-                              setShippingInfo({ ...shippingInfo, country: e.target.value })
+                            onValueChange={(value) =>
+                              setShippingInfo({ ...shippingInfo, country: value })
                             }
-                            disabled
-                          />
+                          >
+                            <SelectTrigger id="country">
+                              <SelectValue placeholder="Select country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {EU_COUNTRIES.map((country) => (
+                                <SelectItem key={country} value={country}>
+                                  {country}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-muted-foreground">
+                            Shipping available in all EU countries
+                          </p>
                         </div>
                       </div>
 
@@ -496,14 +562,20 @@ const Checkout = () => {
                       )}
                     </span>
                   </div>
-                  {getTotalPrice() < 500 && shipping > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Add {formatCurrencyWithLocale(
-                        convertCurrency(500 - getTotalPrice(), 'SEK', currency),
-                        currency
-                      )} more for free shipping
-                    </p>
-                  )}
+                  {(() => {
+                    const isSweden = shippingInfo.country === 'Sweden';
+                    const freeShippingThreshold = isSweden ? 500 : 800;
+                    const currentTotal = getTotalPrice();
+                    
+                    return currentTotal < freeShippingThreshold && shipping > 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        Add {formatCurrencyWithLocale(
+                          convertCurrency(freeShippingThreshold - currentTotal, 'SEK', currency),
+                          currency
+                        )} more for free shipping
+                      </p>
+                    );
+                  })()}
                 </div>
 
                 <Separator />
